@@ -23,7 +23,7 @@ import usecase.GetGradeUseCase;
 import usecase.JoinTeamUseCase;
 import usecase.LeaveTeamUseCase;
 import usecase.LogGradeUseCase;
-
+// TEST
 /**
  * GUI class to run the GUI for the Grade App.
  */
