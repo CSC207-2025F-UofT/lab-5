@@ -1,4 +1,4 @@
-package app.gui;
+package main.java.app.gui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
