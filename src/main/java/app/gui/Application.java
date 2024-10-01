@@ -245,7 +245,7 @@ public class Application {
         theCard.setLayout(new GridLayout(ROWS, COLS));
         final JTextField courseField = new JTextField(20);
         // make a separate line.
-        final JButton 6Button = new JButton("Get Average Grade");
+        final JButton getAverageButton = new JButton("Get Average Grade");
         // TODO Task 4: Add another button for "Get Top Grade" (check the getAverageButton for example)
 
         final JButton leaveTeamButton = new JButton("Leave Team");
