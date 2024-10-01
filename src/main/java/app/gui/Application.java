@@ -264,7 +264,18 @@ public class Application {
             }
         });
 
-        // TODO Task 4: Add action listener for getTopGrade button, follow example of getAverageButton
+        getTopGradeButton.addActionListener(event -> {
+            final String course = courseField.getText();
+
+            try {
+                final int topGrade = getTopGradeUseCase.getTopGrade(course);  // Assuming getTopGrade returns an int
+                JOptionPane.showMessageDialog(jFrame, "Top Grade: " + topGrade);
+                courseField.setText("");
+            }
+            catch (Exception ex) {
+                JOptionPane.showMessageDialog(jFrame, ex.getMessage());
+            }
+        });
 
         leaveTeamButton.addActionListener(event -> {
             try {
