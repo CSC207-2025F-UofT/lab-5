@@ -29,6 +29,8 @@ public class MongoGradeDataBase implements GradeDataBase {
     private static final String TOKEN = "token";
     // load getPassword() from env variable.
     private static final int SUCCESS_CODE = 200;
+    private static final int STATUS_NOT_FOUND = 404;
+    private static final int STATUS_UNAUTHORIZED = 401;
 
     public static String getAPIToken() {
         return System.getenv(TOKEN);
@@ -246,6 +248,7 @@ public class MongoGradeDataBase implements GradeDataBase {
     //       Hint: Read the Grade API documentation for getMyTeam (link below) and refer to the above similar
     //             methods to help you write this code (copy-and-paste + edit as needed).
     //             https://www.postman.com/cloudy-astronaut-813156/csc207-grade-apis-demo/folder/isr2ymn/get-my-team
+
     public Team getMyTeam() {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -256,12 +259,45 @@ public class MongoGradeDataBase implements GradeDataBase {
                 .addHeader(CONTENT_TYPE, APPLICATION_JSON)
                 .build();
 
-        final Response response;
-        final JSONObject responseBody;
+        try {
+            final Response response = client.newCall(request).execute();
+            final JSONObject responseBody = new JSONObject(response.body().string());
 
-        // TODO Task 3b: Implement the logic to get the team information
-        // HINT: Look at the formTeam method to get an idea on how to parse the response
+            if (responseBody.getInt(STATUS_CODE) == SUCCESS_CODE) {
+                // Successful response with team details
+                final JSONObject team = responseBody.getJSONObject("team");
+                final JSONArray membersArray = team.getJSONArray("members");
+                final String[] members = new String[membersArray.length()];
 
-        return null;
+                for (int i = 0; i < membersArray.length(); i++) {
+                    members[i] = membersArray.getString(i);
+                }
+
+                return Team.builder()
+                        .name(team.getString("name"))
+                        .members(members)
+                        .build();
+
+            }
+            else if (responseBody.getInt(STATUS_CODE) == STATUS_NOT_FOUND) {
+                // Not in any team
+                throw new RuntimeException("You are not in a team.");
+
+            }
+            else if (responseBody.getInt(STATUS_CODE) == STATUS_UNAUTHORIZED) {
+                // Invalid API token
+                throw new RuntimeException("Invalid token.");
+
+            }
+            else {
+                // Other unexpected response
+                throw new RuntimeException(responseBody.getString(MESSAGE));
+            }
+        }
+        catch (IOException | JSONException event) {
+            throw new RuntimeException(event);
+        }
     }
 }
+
+
