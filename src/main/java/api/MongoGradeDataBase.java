@@ -225,6 +225,7 @@ public class MongoGradeDataBase implements GradeDataBase {
                 .url(String.format("%s/leaveTeam", API_URL))
                 .method("PUT", body)
                 .addHeader(TOKEN, getAPIToken())
+
                 .addHeader(CONTENT_TYPE, APPLICATION_JSON)
                 .build();
 
@@ -249,19 +250,35 @@ public class MongoGradeDataBase implements GradeDataBase {
     public Team getMyTeam() {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
+        final JSONObject requestBody = new JSONObject();
         final Request request = new Request.Builder()
                 .url(String.format("%s/team", API_URL))
                 .method("GET", null)
                 .addHeader(TOKEN, getAPIToken())
                 .addHeader(CONTENT_TYPE, APPLICATION_JSON)
                 .build();
+        try {
+            // Store responses from API
+            final Response response = client.newCall(request).execute();
+            final JSONObject responseBody = new JSONObject(response.body().string());
+            // if successfully used API store team names into array
+            if (responseBody.getInt(STATUS_CODE) == SUCCESS_CODE) {
+                final JSONObject team = responseBody.getJSONObject("team");
+                final JSONArray membersArray = team.getJSONArray("members");
+                final String[] members = new String[membersArray.length()];
+                for (int i = 0; i < membersArray.length(); i++) {
+                    members[i] = membersArray.getString(i);
+                }
+                final String name = team.getString(NAME);
+                return new Team(name, members);
+            }
 
-        final Response response;
-        final JSONObject responseBody;
+            else {
+                throw new RuntimeException(responseBody.getString(MESSAGE));
+            }
 
-        // TODO Task 3b: Implement the logic to get the team information
-        // HINT: Look at the formTeam method to get an idea on how to parse the response
-
-        return null;
+            } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }
