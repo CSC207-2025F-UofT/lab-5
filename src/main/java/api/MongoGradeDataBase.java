@@ -242,10 +242,6 @@ public class MongoGradeDataBase implements GradeDataBase {
     }
 
     @Override
-    // TODO Task 3b: Implement this method
-    //       Hint: Read the Grade API documentation for getMyTeam (link below) and refer to the above similar
-    //             methods to help you write this code (copy-and-paste + edit as needed).
-    //             https://www.postman.com/cloudy-astronaut-813156/csc207-grade-apis-demo/folder/isr2ymn/get-my-team
     public Team getMyTeam() {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -259,9 +255,39 @@ public class MongoGradeDataBase implements GradeDataBase {
         final Response response;
         final JSONObject responseBody;
 
-        // TODO Task 3b: Implement the logic to get the team information
         // HINT: Look at the formTeam method to get an idea on how to parse the response
+        try {
+            response = client.newCall(request).execute();
 
-        return null;
+            String responseString = response.body().string();
+            responseBody = new JSONObject(responseString);
+
+            if (responseBody.getInt(STATUS_CODE) == SUCCESS_CODE) {
+                JSONObject team = responseBody.getJSONObject("team");
+                JSONArray membersArray = team.getJSONArray("members");
+                String[] members = new String[membersArray.length()];
+
+                for (int i = 0; i < membersArray.length(); i++) {
+                    members[i] = membersArray.getString(i);
+                }
+
+                return Team.builder()
+                        .name(team.getString("name"))
+                        .members(members)
+                        .build();
+            }
+            else if (responseBody.getInt(STATUS_CODE) == 404) {
+                throw new RuntimeException("You are not in a team");
+            }
+            else if (responseBody.getInt(STATUS_CODE) == 401) {
+                throw new RuntimeException("Invalid token");
+            }
+            else {
+                throw new RuntimeException(responseBody.getString("message"));
+            }
+        }
+        catch (IOException | JSONException event) {
+            throw new RuntimeException(event);
+        }
     }
 }
