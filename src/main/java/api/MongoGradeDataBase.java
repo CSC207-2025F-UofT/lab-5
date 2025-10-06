@@ -254,6 +254,7 @@ public class MongoGradeDataBase implements GradeDataBase {
     public Team getMyTeam() {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
+
         final Request request = new Request.Builder()
                 .url(String.format("%s/team", API_URL))
                 .method("GET", null)
@@ -261,13 +262,28 @@ public class MongoGradeDataBase implements GradeDataBase {
                 .addHeader(CONTENT_TYPE, APPLICATION_JSON)
                 .build();
 
-        final Response response;
-        final JSONObject responseBody;
+        Response r = null;
+        try {
+             Response response = client.newCall(request).execute();
+             r = response;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        final JSONObject responseBody = new JSONObject(r.body().toString());
+        JSONArray membersArray = responseBody.getJSONArray("members");
+        String[] members = new String[membersArray.length()];
+
+        for (int i = 0; i < membersArray.length(); i++) {
+            members[i] = membersArray.getString(i);
+        }
+        Team team = new Team(responseBody.getString("name"), members);
+
 
         // TODO Task 3b: Implement the logic to get the team information
         // HINT 1: Look at the formTeam method to get an idea on how to parse the response
         // HINT 2: You may find it useful to just initially print the contents of the JSON
         //         then work on the details of how to parse it.
-        return null;
+        return team;
     }
 }
