@@ -290,7 +290,7 @@ public class MongoGradeDataBase implements GradeDataBase {
                         .build();
 
             } else if (code == 404) {
-                // Not in a team
+                // Not in a team 404
                 return null;
 
             } else {
