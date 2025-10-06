@@ -3,6 +3,9 @@ package usecase;
 import api.GradeDataBase;
 import entity.Grade;
 import entity.Team;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.OkHttpClient;
 
 import java.lang.reflect.Member;
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ public final class GetAverageGradeUseCase {
         if (count == 0) {
             return 0;
         }
+
         return sum / count;
     }
 }
