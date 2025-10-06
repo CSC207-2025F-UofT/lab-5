@@ -337,6 +337,7 @@ public class Application {
         // TODO Task 4: Add another button for "Get Top Grade" (check the getAverageButton for example)
         final JButton getTopGradeButton = new JButton("Get Top Grade");
 
+
         final JButton leaveTeamButton = new JButton("Leave Team");
         final JLabel resultLabel = new JLabel();
 
@@ -356,6 +357,20 @@ public class Application {
                     courseField.setText("");
                 }
                 catch (JSONException ex) {
+                    JOptionPane.showMessageDialog(jFrame, ex.getMessage());
+                }
+            }
+        });
+
+        getTopGradeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                final String course = courseField.getText();
+                try {
+                    final float top = getTopGradeUseCase.getTopGrade(course);
+                    JOptionPane.showMessageDialog(jFrame, "Top Grade: " + top);
+                    courseField.setText("");
+                } catch (org.json.JSONException ex) {
                     JOptionPane.showMessageDialog(jFrame, ex.getMessage());
                 }
             }
