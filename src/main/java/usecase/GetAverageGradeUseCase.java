@@ -29,6 +29,14 @@ public final class GetAverageGradeUseCase {
         // TODO Task 3a: Complete the logic of calculating the average course grade for
         //              your team members. Hint: the getGrades method might be useful.
 
+        for (String member : team.getMembers()) {
+            var grades = gradeDataBase.getGrade(member,course);
+            if (grades != null) {
+                sum += grades.getGrade();
+            }
+            count++;
+        }
+
         if (count == 0) {
             return 0;
         }
