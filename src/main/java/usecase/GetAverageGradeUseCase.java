@@ -7,6 +7,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.OkHttpClient;
 
+import java.lang.reflect.Member;
+import java.util.ArrayList;
+
 /**
  * GetAverageGradeUseCase class.
  */
@@ -25,15 +28,12 @@ public final class GetAverageGradeUseCase {
     public float getAverageGrade(String course) {
         // Call the API to get usernames of all your team members
         float sum = 0;
+        int count = 0;
         final Team team = gradeDataBase.getMyTeam();
-        int count = team.getMembers().length;
-
-        for (String person: team.getMembers()) {
-            System.out.println(person);
-            Grade grade = gradeDataBase.getGrade(person, course);
-            sum += grade.getGrade();
+        for (String member : team.getMembers()) {
+            sum += gradeDataBase.getGrade(member, course).getGrade();
+            count ++;
         }
-
         if (count == 0) {
             return 0;
         }

@@ -271,10 +271,16 @@ public class MongoGradeDataBase implements GradeDataBase {
             for (int i = 0; i < members.length; i++) {
                 members[i] = teamMembers.getString(i);
             }
-
             return new Team(name, members);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+}
+        // TODO Task 3b: Implement the logic to get the team information
+        // HINT 1: Look at the formTeam method to get an idea on how to parse the response
+        // HINT 2: You may find it useful to just initially print the contents of the JSON
+        //         then work on the details of how to parse it.
+        return null;
     }
 }
