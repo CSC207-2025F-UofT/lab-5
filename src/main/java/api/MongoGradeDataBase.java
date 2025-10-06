@@ -56,6 +56,7 @@ public class MongoGradeDataBase implements GradeDataBase {
             final JSONObject responseBody = new JSONObject(response.body().string());
 
             if (responseBody.getInt(STATUS_CODE) == SUCCESS_CODE) {
+                System.out.println(responseBody);
                 final JSONObject grade = responseBody.getJSONObject(GRADE);
                 return Grade.builder()
                         .username(grade.getString(USERNAME))
@@ -247,10 +248,6 @@ public class MongoGradeDataBase implements GradeDataBase {
     }
 
     @Override
-    // TODO Task 3b: Implement this method
-    //       Hint: Read the Grade API documentation for getMyTeam (link below) and refer to the above similar
-    //             methods to help you write this code (copy-and-paste + edit as needed).
-    //             https://www.postman.com/cloudy-astronaut-813156/csc207-grade-apis-demo/folder/isr2ymn/get-my-team
     public Team getMyTeam() {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -261,13 +258,23 @@ public class MongoGradeDataBase implements GradeDataBase {
                 .addHeader(CONTENT_TYPE, APPLICATION_JSON)
                 .build();
 
-        final Response response;
-        final JSONObject responseBody;
+        try (Response response = client.newCall(request).execute()) {
+            String JSONString = response.body().string();
 
-        // TODO Task 3b: Implement the logic to get the team information
-        // HINT 1: Look at the formTeam method to get an idea on how to parse the response
-        // HINT 2: You may find it useful to just initially print the contents of the JSON
-        //         then work on the details of how to parse it.
-        return null;
+            final JSONObject jsonObject = new JSONObject(JSONString);
+
+            JSONObject team = jsonObject.getJSONObject("team");
+            String name = team.getString("name");
+            JSONArray teamMembers = team.getJSONArray("members");
+            String[] members = new String[teamMembers.length()];
+
+            for (int i = 0; i < members.length; i++) {
+                members[i] = teamMembers.getString(i);
+            }
+
+            return new Team(name, members);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
