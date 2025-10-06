@@ -268,6 +268,37 @@ public class MongoGradeDataBase implements GradeDataBase {
         // HINT 1: Look at the formTeam method to get an idea on how to parse the response
         // HINT 2: You may find it useful to just initially print the contents of the JSON
         //         then work on the details of how to parse it.
-        return null;
+        try (Response resp = client.newCall(request).execute()){
+            final String raw = resp.body() == null ? "" : resp.body().string();
+            final JSONObject body = new JSONObject(raw);   // <— single JSON object
+
+            final int code = body.getInt(STATUS_CODE);
+            if (code == SUCCESS_CODE) {
+                // Expect: { status_code: 200, team: { name: "...", members: ["u1","u2",...] } }
+                if (!body.has("team") || body.isNull("team")) {
+                    return null; // defensive, but some APIs may omit team
+                }
+                final JSONObject team = body.getJSONObject("team");
+                final JSONArray membersArray = team.getJSONArray("members");
+                final String[] members = new String[membersArray.length()];
+                for (int i = 0; i < membersArray.length(); i++) {
+                    members[i] = membersArray.getString(i);
+                }
+                return Team.builder()
+                        .name(team.getString(NAME))
+                        .members(members)
+                        .build();
+
+            } else if (code == 404) {
+                // Not in a team
+                return null;
+
+            } else {
+                throw new RuntimeException(body.optString(MESSAGE, "Unknown error"));
+            }
+        } catch (IOException | JSONException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
