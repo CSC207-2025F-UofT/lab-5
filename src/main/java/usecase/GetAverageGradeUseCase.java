@@ -20,26 +20,38 @@ public final class GetAverageGradeUseCase {
      * @return The average grade.
      */
     public float getAverageGrade(String course) {
-        // Call the API to get usernames of all your team members
-        float sum = 0;
+        float sum = 0f;
         int count = 0;
-        // TODO Task 3b: Go to the MongoGradeDataBase class and implement getMyTeam.
+
         final Team team = gradeDataBase.getMyTeam();
-        // Call the API to get all the grades for the course for all your team members
-        // TODO Task 3a: Complete the logic of calculating the average course grade for
-        //              your team members. Hint: the getGrades method might be useful.
+        if (team == null || team.getMembers() == null || team.getMembers().length == 0) {
+            throw new IllegalStateException();
+        }
 
-        String[] members= team.getMembers();
+        for (String username : team.getMembers()) {
+            if (username == null || username.isBlank()) continue;
+            Grade[] grades;
+            try {
+                grades = gradeDataBase.getGrades(username);
+            } catch (RuntimeException ex) {
+                continue;
+            }
+            if (grades == null) continue;
 
-        for (String m: members) {
-            count += 1;
-            Grade grade = gradeDataBase.getGrade(m, "207");
-            sum += grade.getGrade();
+            for (Grade g : grades) {
+                if (g == null) continue;
+                if (course.equals(g.getCourse())) {
+                    sum += g.getGrade();
+                    count++;
+                    break;
+                }
+            }
         }
 
         if (count == 0) {
-            return 0;
+            throw new IllegalStateException();
         }
         return sum / count;
     }
+
 }
