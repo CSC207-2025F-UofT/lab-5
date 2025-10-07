@@ -19,6 +19,7 @@ public class Config {
 
     /**
      * Get the GetGradeUseCase object.
+     * 
      * @return GetGradeUseCase object.
      */
     public GetGradeUseCase getGradeUseCase() {
@@ -27,6 +28,7 @@ public class Config {
 
     /**
      * Get the LogGradeUseCase object.
+     * 
      * @return LogGradeUseCase object.
      */
     public LogGradeUseCase logGradeUseCase() {
@@ -35,6 +37,7 @@ public class Config {
 
     /**
      * Get the FormTeamUseCase object.
+     * 
      * @return FormTeamUseCase object.
      */
     public FormTeamUseCase formTeamUseCase() {
@@ -43,6 +46,7 @@ public class Config {
 
     /**
      * Get the JoinTeamUseCase object.
+     * 
      * @return JoinTeamUseCase object.
      */
     public JoinTeamUseCase joinTeamUseCase() {
@@ -51,6 +55,7 @@ public class Config {
 
     /**
      * Get the LeaveTeamUseCase object.
+     * 
      * @return LeaveTeamUseCase object.
      */
     public LeaveTeamUseCase leaveTeamUseCase() {
@@ -59,11 +64,16 @@ public class Config {
 
     /**
      * Get the GetAverageGradeUseCase object.
+     * 
      * @return GetAverageGradeUseCase object.
      */
     public GetAverageGradeUseCase getAverageGradeUseCase() {
         return new GetAverageGradeUseCase(gradeDataBase);
     }
 
-    // TODO Task 4: add code for the new GetTopGradeUseCase following the same pattern as the other use cases above.
+    // TODO Task 4: add code for the new GetTopGradeUseCase following the same
+    // pattern as the other use cases above.
+    public GetTopGradeUseCase getTopGradeUseCase() {
+        return new GetTopGradeUseCase(gradeDataBase);
+    }
 }
