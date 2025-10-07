@@ -42,9 +42,12 @@ public final class GetAverageGradeUseCase {
                 System.err.println("No grades found for member " + member);
                 continue;
             }
+            // Only include grades for the requested course
             for (Grade grade : grades) {
-                sum += grade.getGrade();
-                count++;
+                if (grade != null && course.equals(grade.getCourse())) {
+                    sum += grade.getGrade();
+                    count++;
+                }
             }
         }
 

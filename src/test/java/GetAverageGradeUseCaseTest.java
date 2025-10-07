@@ -8,10 +8,10 @@ import entity.Team;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 /**
  * Testing get average grade across your team.
- * The idea is that we don't want to wait for the specific API call to be implemented.
+ * The idea is that we don't want to wait for the specific API call to be
+ * implemented.
  * <p>
  * This is like the other test, but doesn't use Mockito to more simply
  * demonstrate the idea of mocking (or stubbing) our GradeDataBase.
@@ -25,7 +25,7 @@ public class GetAverageGradeUseCaseTest {
 
     @BeforeEach
     void setUp() {
-        gradeDB = new GradeDataBaseStub();  // Using a stub instead of a mock
+        gradeDB = new GradeDataBaseStub(); // Using a stub instead of a mock
         getAverageGradeUseCase = new GetAverageGradeUseCase(gradeDB);
     }
 
@@ -47,19 +47,19 @@ public class GetAverageGradeUseCaseTest {
             if (username.equals("t1chenpa")) {
                 if (course.equals("CSC207")) {
                     grade = Grade.builder()
-                                .username("t1chenpa")
-                                .course("CSC207")
-                                .grade(85)
-                                .build();
+                            .username("t1chenpa")
+                            .course("CSC207")
+                            .grade(85)
+                            .build();
 
                 }
             } else if (username.equals("t2chenpa")) {
                 if (course.equals("CSC207")) {
                     grade = Grade.builder()
-                                .username("t2chenpa")
-                                .course("CSC207")
-                                .grade(81)
-                                .build();
+                            .username("t2chenpa")
+                            .course("CSC207")
+                            .grade(81)
+                            .build();
                 }
             }
             return grade;
@@ -73,7 +73,7 @@ public class GetAverageGradeUseCaseTest {
         @Override
         public Grade[] getGrades(String username) {
             if (username.equals("t1chenpa")) {
-                return new Grade[]{
+                return new Grade[] {
                         Grade.builder()
                                 .username("t1chenpa")
                                 .course("CSC207")
@@ -91,7 +91,7 @@ public class GetAverageGradeUseCaseTest {
                                 .build()
                 };
             } else if (username.equals("t2chenpa")) {
-                return new Grade[]{
+                return new Grade[] {
                         Grade.builder()
                                 .username("t2chenpa")
                                 .course("CSC207")
@@ -121,7 +121,7 @@ public class GetAverageGradeUseCaseTest {
         public Team getMyTeam() {
             return Team.builder()
                     .name("team1")
-                    .members(new String[]{"t1chenpa", "t2chenpa"})
+                    .members(new String[] { "t1chenpa", "t2chenpa" })
                     .build();
         }
 
