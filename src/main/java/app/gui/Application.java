@@ -352,9 +352,11 @@ public class Application {
             }
         });
 
+        MongoGradeDataBase db = new MongoGradeDataBase();
         // TODO Task 4: Add action listener for getTopGrade button, follow example of getAverageButton
         getTopGradeButton.addActionListener(new ActionListener() {
-            private GetTopGradeUseCase getTopGradeUseCase;
+            MongoGradeDataBase db = new MongoGradeDataBase();
+            private GetTopGradeUseCase getTopGradeUseCase = new GetTopGradeUseCase(db);
 
             /**
              * Invoked when an action occurs.
@@ -363,6 +365,7 @@ public class Application {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
+//                GetTopGradeUseCase getTopGradeUseCase = new GetTopGradeUseCase(db);
                 final String course = courseField.getText();
 
                 try {
